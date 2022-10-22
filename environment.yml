@@ -6,9 +6,6 @@ dependencies:
  
   - matplotlib=3.3.4=py38haa95532_0
   - matplotlib-base=3.3.4=py38h49ac443_0
-  - scipy=1.6.2=py38h66253e8_1
   - seaborn=0.11.1=pyhd3eb1b0_0
-  - sqlite=3.35.4=h2bbff1b_0
-  - statsmodels=0.12.2=py38h2bbff1b_0
   
 prefix: C:\Users\IDAMU\Documents\Anaconda
