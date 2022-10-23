@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
-st.write("**First Data Science Project**")
+st.title("**First Data Science Project**")
 st.write("Drake Khazal")
 st.write("Ala Al-Humadi")
 
@@ -38,11 +38,12 @@ fig,ax = plt.subplots()
 #the colormap is a built-in colormap, use it to generate a list of color values and assign those based on the absolute magnitude
 
 plt.scatter(impact_data[plot_var_1],impact_data[plot_var_2], s = impact_data['Asteroid Diameter (km)']*400, c = impact_data["Asteroid Magnitude"],cmap = "plasma")
-plt.title('Asteroid Parameter Comparison')
-plt.xlabel(plot_var_1);
+
+plt.xlabel(plot_var_1)
 plt.ylabel(plot_var_2)
 
 st.write("Choose 2 asteroid parameters to plot")
+plt.legend()
 st.pyplot(fig)
 
 
