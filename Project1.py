@@ -16,6 +16,7 @@ st.write("Drake Khazal")
 st.write("Ala Al-Humadi")
 
 st.write("Plotting of NASA Sentry Asteroid Impact Data")
+
 #read in the data using pandas read_csv()
 impact_data = pd.read_csv('impacts.csv')
 st.dataframe(data=impact_data)
@@ -40,6 +41,8 @@ plt.scatter(impact_data[plot_var_1],impact_data[plot_var_2], s = impact_data['As
 plt.title('Asteroid Parameter Comparison')
 plt.xlabel(plot_var_1);
 plt.ylabel(plot_var_2)
+
+st.write("Choose 2 asteroid parameters to plot")
 st.pyplot(fig)
 
 
