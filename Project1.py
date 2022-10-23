@@ -23,6 +23,8 @@ orbits_data = pd.read_csv('orbits.csv')
 st.dataframe(data=impact_data)
 st.dataframe(data=orbits_data)
 
+st.write("some text")
+
 #gotta figure out way to exclude the non-numeric variables from the drop-down lists for plotting
 
 #create two column containers and put a selectbox in each one
