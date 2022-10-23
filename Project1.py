@@ -19,7 +19,9 @@ st.write("Plotting of NASA Sentry Asteroid Impact Data")
 
 #read in the data using pandas read_csv()
 impact_data = pd.read_csv('impacts.csv')
+orbits_data = pd.read_csv('orbits.csv')
 st.dataframe(data=impact_data)
+st.dataframe(data=orbits_data)
 
 #gotta figure out way to exclude the non-numeric variables from the drop-down lists for plotting
 
@@ -41,9 +43,10 @@ plt.scatter(impact_data[plot_var_1],impact_data[plot_var_2], s = impact_data['As
 
 plt.xlabel(plot_var_1)
 plt.ylabel(plot_var_2)
-
+plt.colorbar()
 st.write("Choose 2 asteroid parameters to plot")
-plt.legend()
+
+
 st.pyplot(fig)
 
 
