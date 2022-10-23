@@ -16,7 +16,7 @@ st.write("Drake Khazal")
 st.write("Ala Al-Humadi")
 
 #read in the data using pandas read_csv()
-impact_data = pd.read_csv('C:/Users/IDAMU/Documents/Data Science Project 1/Asteroid Dataset/impacts.csv')
+impact_data = pd.read_csv('impacts.csv')
 st.dataframe(data=impact_data)
 
 #gotta figure out way to exclude the non-numeric variables from the drop-down lists for plotting
