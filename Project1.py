@@ -15,6 +15,7 @@ st.write("**First Data Science Project**")
 st.write("Drake Khazal")
 st.write("Ala Al-Humadi")
 
+st.write("Plotting of NASA Sentry Asteroid Impact Data")
 #read in the data using pandas read_csv()
 impact_data = pd.read_csv('impacts.csv')
 st.dataframe(data=impact_data)
