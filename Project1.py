@@ -48,7 +48,7 @@ plt.ylabel(plot_var_2)
 plt.colorbar()
 st.write("Choose 2 asteroid parameters to plot")
 
-ax.legend([[impact['Asteroid Diameter (km)']],['Asteroid Diameter (km)'])
+#ax.legend([[impact['Asteroid Diameter (km)']],['Asteroid Diameter (km)'])
 st.pyplot(fig)
 
 
