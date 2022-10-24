@@ -28,11 +28,13 @@ st.dataframe(data=orbits_data)
 
 #create two column containers and put a selectbox in each one
 col1, col2 = st.columns(2)
+
 with col1:
-    plot_var_1 = st.selectbox(label='Select x-axis',options=impact_data.columns)
+    
+    plot_var_1 = st.selectbox(label='Select x-axis',options=impact_data.columns[1::])
 
 with col2:
-    plot_var_2 = st.selectbox(label='Select y-axis',options=impact_data.columns)
+    plot_var_2 = st.selectbox(label='Select y-axis',options=impact_data.columns[1::])
 
 
 #create matplotlib figure and axis
@@ -50,6 +52,6 @@ plt.ylabel(plot_var_2)
 st.write("Choose 2 asteroid parameters to plot")
 
 #ax.legend(s,'Asteroid Diameter (km)')
-#st.pyplot(fig)
+
 
 
