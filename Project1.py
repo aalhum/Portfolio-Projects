@@ -23,7 +23,6 @@ orbits_data = pd.read_csv('orbits.csv')
 st.dataframe(data=impact_data)
 st.dataframe(data=orbits_data)
 
-st.write("some text")
 
 #gotta figure out way to exclude the non-numeric variables from the drop-down lists for plotting
 
@@ -35,20 +34,22 @@ with col1:
 with col2:
     plot_var_2 = st.selectbox(label='Select y-axis',options=impact_data.columns)
 
+
 #create matplotlib figure and axis
 fig,ax = plt.subplots()
 
 #create scatterplot using variables from drop down menu
 #the colormap is a built-in colormap, use it to generate a list of color values and assign those based on the absolute magnitude
 
-plt.scatter(impact_data[plot_var_1],impact_data[plot_var_2], s = impact_data['Asteroid Diameter (km)']*400, c = impact_data["Asteroid Magnitude"],cmap = "plasma")
+st.pyplot(sns.relplot(data=impact_data, x=plot_var_1,y=plot_var_2, hue = "Asteroid Magnitude", size = "Asteroid Diameter (km)"))
+
 
 plt.xlabel(plot_var_1)
 plt.ylabel(plot_var_2)
-plt.colorbar()
+
 st.write("Choose 2 asteroid parameters to plot")
 
-#ax.legend([[impact['Asteroid Diameter (km)']],['Asteroid Diameter (km)'])
-st.pyplot(fig)
+#ax.legend(s,'Asteroid Diameter (km)')
+#st.pyplot(fig)
 
 
