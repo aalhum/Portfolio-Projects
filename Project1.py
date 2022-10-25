@@ -72,7 +72,7 @@ fig,ax = plt.subplots()
 #create scatterplot using variables from drop down menu
 #the colormap is a built-in colormap, use it to generate a list of color values and assign those based on the absolute magnitude
 
-st.pyplot(sns.relplot(data=impact_data, x=plot_var_1,y=plot_var_2, hue = "Asteroid Magnitude", sizes=(20,300), size = "Asteroid Diameter (km)"))
+st.pyplot(sns.relplot(data=impact_data, x=plot_var_1,y=plot_var_2, hue = "Asteroid Magnitude", palette="crest", sizes=(20,300), size = "Asteroid Diameter (km)"))
 
 
 plt.xlabel(plot_var_1)
