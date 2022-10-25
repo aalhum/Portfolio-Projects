@@ -12,7 +12,7 @@ import seaborn as sns
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
-st.title("**First Data Science Project**")
+st.title("**Exploration of NASA Potential Asteroid Impact Data**")
 st.write("Drake Khazal")
 st.write("Ala Al-Humadi")
 
