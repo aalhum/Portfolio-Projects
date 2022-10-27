@@ -12,7 +12,11 @@ st.write("Plotting of Known Asteroid Orbital Characteristics")
 
 #read in the data using pandas read_csv()
 orbits_data = pd.read_csv('orbits.csv')
-st.dataframe(data=orbits_data)
+
+raw_data_expand_2 = st.expander('Show Raw Data Table')
+
+with raw_data_expand_2:
+    st.dataframe(data=orbits_data)
 
 
 #gotta figure out way to exclude the non-numeric variables from the drop-down lists for plotting
@@ -73,3 +77,4 @@ plt.xlabel(plot_var_1)
 plt.ylabel(plot_var_2)
 
 st.write("Choose 2 asteroid parameters to plot")
+
