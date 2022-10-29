@@ -10,7 +10,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
-
+from sklearn import linear_model
+from pandasql import sqldf
+pysqldf = lambda q: sqldf(q, globals())
 
 st.title("**Exploration of NASA Potential Asteroid Impact Data**")
 st.write("Drake Khazal")
@@ -18,17 +20,23 @@ st.write("Ala Al-Humadi")
 
 st.write("Plotting of NASA Sentry Asteroid Impact Data")
 
+st.write("Below is the dataset that we used for this project - it is a collection of data on various asteroids, obtained from NASA's Sentry system on their website")
+
 #read in the data using pandas read_csv()
 impact_data = pd.read_csv('impacts.csv')
 
 raw_data_expand_1 = st.expander('Show Raw Data Table')
+summary_expand = st.expander('Show Summary Statistics for Dataset')
 
 with raw_data_expand_1:
     st.dataframe(data=impact_data)
     
-    st.write(impact_data["Maximum Torino Scale"])
+with summary_expand:
+    st.write(impact_data.describe())
 
+#SQL syntax
 
+#st.write(pysqldf("SELECT * FROM impact_data LIMIT 10;"))
 
 #gotta figure out way to exclude the non-numeric variables from the drop-down lists for plotting
 
