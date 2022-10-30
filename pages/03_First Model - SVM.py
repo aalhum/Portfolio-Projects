@@ -31,7 +31,7 @@ test_orbits_data = orbits_data.iloc[cutoff::,:]
 train_orbits_data = orbits_data.iloc[0:cutoff,:]
 test_labels = test_orbits_data.pop('Object Classification')  #get the asteroid classifications/target labels
 train_labels = train_orbits_data.pop('Object Classification')
-subset = ['Orbit Eccentricity','Perihelion Distance (AU)']   #what subset of features to use
+subset = ['Asteroid Magnitude','Minimum Orbit Intersection Distance (AU)']   #what subset of features to use
 train_subset = train_orbits_data[subset]
 test_subset = test_orbits_data[subset]
 
