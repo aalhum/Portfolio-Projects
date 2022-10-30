@@ -51,5 +51,6 @@ for k_val in k_values:
 
 scores_data_frame = pd.DataFrame(data=np.transpose(scores),columns = ['K Value','Average Accuracy'])
 
+
 st.write("Different K values and their associated classification accuracy")
 st.dataframe(scores_data_frame)
