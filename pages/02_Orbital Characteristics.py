@@ -36,16 +36,26 @@ hazard_orbit = pysqldf("SELECT * FROM orbits_data WHERE [Object Classification] 
 
 with asteroid_class_stats:
     st.write('Choose an orbital characteristic below to see how the boxplots differ by asteroid classification:')
-
     summary_class_param = st.selectbox(label='Choose a variable',options=orbits_data.columns[2::])
     
-    fig_summ,ax_summ = plt.subplots()
+    col_summ, col_summ2 = st.columns(2)
+
+    with col_summ:
+        st.write("Non-Hazardous Asteroids")
+        fig_summ,ax_summ = plt.subplots()    
+        sns.boxplot(not_hazard_orbit,x='Object Classification',y=summary_class_param)  #plot boxplots for the nonhazardous asteroids with y being selected parameter
+        st.pyplot(fig_summ)
+
+    with col_summ2:
+        st.write("Hazardous Asteroids")
+        fig_summ2, ax_summ2 = plt.subplots()
+        sns.boxplot(hazard_orbit,x='Object Classification',y=summary_class_param)
+        plt.rcParams["xtick.labelsize"] = 7
+        st.pyplot(fig_summ2)
+    
+st.write("Note: Hazardous asteroids are those with a minimum orbit intersection distance of 0.05 or less and an absolute magnitude of 22.0 or less, according to this page: https://cneos.jpl.nasa.gov/glossary/PHA.html. See the explanations for each variable in the selection boxes above the scatterplot:")
+   
     #I want the user to pick a variable to plot and then it generates scatterplot comparisons for the different asteroid classifications
-    sns.boxplot(not_hazard_orbit,x='Object Classification',y=summary_class_param)  #plot boxplots for the nonhazardous asteroids with y being selected parameter
-    st.pyplot(fig_summ)
-    fig_summ2, ax_summ2 = plt.subplots()
-    sns.boxplot(hazard_orbit,x='Object Classification',y=summary_class_param)
-    st.pyplot(fig_summ2)
 
 def get_explanation(plot_var):   #get a text description for the variable being plotted. note I wanted to use switch/case statements but don't think Python has them
     if plot_var == 'Epoch (TDB)':
