@@ -15,12 +15,20 @@ from pandasql import sqldf
 pysqldf = lambda q: sqldf(q, globals())
 
 st.title("**Exploration of NASA Potential Asteroid Impact Data**")
-st.write("Drake Khazal")
+
+st.write("Contributors:")
+
 st.write("Ala Al-Humadi")
+st.write("Drake Khazal")
 
-st.write("Plotting of NASA Sentry Asteroid Impact Data")
 
-st.write("Below is the dataset that we used for this project - it is a collection of data on various asteroids, obtained from NASA's Sentry system on their website")
+st.write("NASA Asteroid Impact Data Exploration")
+st.write("The data used for this project was taken from: https://www.kaggle.com/datasets/nasa/asteroid-impacts")
+st.write("The data is in 2 parts:")
+st.write("The first dataset is displayed on this page below, and it includes variables such as Asteroid Magnitude (a measure of brightness), Asteroid Velocity, Palermo/Torino Scale values (click on these parameters in the drop-down menu to learn more about them)")
+st.write("The second dataset is displayed on the \"Orbital Characteristics\" page. It lists the names of many known asteroids and their orbital characteristics, such as orbit eccentricity, node longitude, perihelion/aphelion distance, etc.... Select each variable in the drop-down menu on that page to learn more")
+st.write("The data is from NASA's Sentry system, a long-term system that monitors the potential orbits of asteroids to see whether they will crash into Earth (a very unlikely occurrence).")
+st.write("On these first two pages, we plot the data using a scatterplot to observe the general trends ")
 
 #read in the data using pandas read_csv()
 impact_data = pd.read_csv('impacts.csv')
@@ -34,9 +42,7 @@ with raw_data_expand_1:
 with summary_expand:
     st.write(impact_data.describe())
 
-#SQL syntax
 
-#st.write(pysqldf("SELECT * FROM impact_data LIMIT 10;"))
 
 #gotta figure out way to exclude the non-numeric variables from the drop-down lists for plotting
 

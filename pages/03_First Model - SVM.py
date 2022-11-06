@@ -11,14 +11,40 @@ from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.inspection import DecisionBoundaryDisplay
-
+from sklearn.datasets import make_blobs
 #citation: Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.
 
 #CODE FOR FIRST MODEL - SVM
 
 st.title('Support Vector Machine')
 
-st.write("A Support Vector Machine (SVM) classifies data points into different classes by calculating a decision boundary, a separation between the different groups.")
+st.write("A Support Vector Machine (SVM) is an algorithm that is best for linearly separable data. It can be used for both classification and regression. It works by selecting \"support vectors\", which are a subset of the data points chosen to represent their classes. The algorithm separates the data points into classes by dividing them using a decision boundary, with the largest possible margin on either side. The margin boundaries are on the support vectors. ")
+
+#EXAMPLE SVC PLOT
+#this code + the decision boundary plotting code comes from the scikit site
+example_pipe = Pipeline([('example_scaler',StandardScaler()),('example_svc',svm.SVC(kernel='linear'))])
+example_pts, example_labels = make_blobs(n_samples = 100,n_features = 2,centers = 2)
+example_pipe.fit(example_pts,example_labels)
+
+
+fig_ex,ax_ex = plt.subplots()
+
+plt.scatter(example_pts[:,0],example_pts[:,1],c=example_labels, cmap=plt.cm.Paired)
+
+DecisionBoundaryDisplay.from_estimator(
+    example_pipe,
+    example_pts,
+    colors="k",
+    levels=[-1,0,1],
+    alpha=0.5,
+    linestyles=["--","-","--"],
+    ax=ax_ex,
+)
+
+plt.show()
+st.pyplot(fig_ex)
+
+
 
 #SET UP TRAINING AND TESTING DATA
 orbits_data = pd.read_csv('orbits.csv')  #read in orbits data
@@ -31,13 +57,13 @@ test_orbits_data = orbits_data.iloc[cutoff::,:]
 train_orbits_data = orbits_data.iloc[0:cutoff,:]
 test_labels = test_orbits_data.pop('Object Classification')  #get the asteroid classifications/target labels
 train_labels = train_orbits_data.pop('Object Classification')
-subset = ['Asteroid Magnitude','Minimum Orbit Intersection Distance (AU)']   #what subset of features to use
+subset = ['Orbit Eccentricity','Perihelion Distance (AU)']   #what subset of features to use
 train_subset = train_orbits_data[subset]
 test_subset = test_orbits_data[subset]
 
 #PREPROCESSING:
 
-a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC())])
+a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC(kernel='poly'))])
 
 
 

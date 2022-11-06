@@ -24,19 +24,8 @@ train_orbits_data = train_orbits_data.drop(['Object Name','Orbital Reference'],a
 test_orbits_data = test_orbits_data.drop(['Object Name','Orbital Reference'],axis=1)
 
 
-#neigh = KNeighborsClassifier(n_neighbors=50)  #Set K equal - TRY DIFF K VALUES, perhaps show results for differing values
-#of k inside a chart
-#neigh.fit(train_orbits_data,train_labels)
-
-#predicted_labels = neigh.predict(test_orbits_data)
-
-#st.write(predicted_labels)  #the labels predicted by the model
-#st.dataframe(test_labels.unique())
-#st.write(confusion_matrix(test_labels,predicted_labels))
-
-
 # list of labels: 'Apollo Asteroid','Amor Asteroid (Hazard)','Apollo Asteroid (Hazard)','Aten Asteroid','Aten Asteroid (Hazard)','Amor Asteroid (Hazard)','Apohele Asteroid','Apohele Asteroid (Hazard)'
-
+#note: we're using all of the features, not just 2
 k_values = [25,50,100,200,300,400,500,600,750]
 scores = np.zeros([2,len(k_values)])
 i = 0
@@ -54,3 +43,10 @@ scores_data_frame = pd.DataFrame(data=np.transpose(scores),columns = ['K Value',
 
 st.write("Different K values and their associated classification accuracy")
 st.dataframe(scores_data_frame)
+
+#The optimal value for K based on the cross validation seems to be 50, with the highest accuracy
+neigh_opt = KNeighborsClassifier(n_neighbors=50)
+neigh.fit(train_orbits_data,train_labels)
+accuracy_opt = neigh.score(test_orbits_data,test_labels)
+st.write("The accuracy of the model (with K=50) on the test set is:")
+st.write(accuracy_opt)

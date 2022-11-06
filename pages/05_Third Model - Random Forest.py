@@ -24,18 +24,25 @@ test_orbits_data = test_orbits_data.drop(['Object Name','Orbital Reference'],axi
 
 
 
-rf_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_rfc',RandomForestClassifier(n_estimators=10))])
+rf_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_rfc',RandomForestClassifier(n_estimators=2))])
 
 
 
 # TRAINING AND TESTING MODEL
+#note: we're using all of the features, not just 2
 rf_pipeline.fit(train_orbits_data,train_labels)  #TRAIN MODEL
 
 
-predictions = rf_pipeline.predict(test_orbits_data)   #PREDICT TESTING DATA
+
 st.write("5-fold cross validation was computed on the training data. The accuracy ratio for each of the 5 folds is given below.")
 accuracies = cross_val_score(rf_pipeline,train_orbits_data,train_labels, cv=5)
 #accuracy = clf.score(test_subset,test_labels)       #OBTAIN ACCURACY
 st.write(accuracies)
 #st.write(np.unique(predictions))
+
+predictions = rf_pipeline.predict(test_orbits_data)   #PREDICT TESTING DATA
+accuracy = rf_pipeline.score(test_orbits_data,test_labels)
+st.write("The accuracy is:")
+st.write(accuracy)
+
 
