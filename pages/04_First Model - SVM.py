@@ -55,7 +55,8 @@ orbits_data = pd.read_csv('orbits.csv')  #read in orbits data
 #st.write(labels.unique())    #check how many unique values are in asteroid classification
 orbits_data = orbits_data.drop(['Object Name','Orbital Reference'],axis=1) #drop columns not used as features
 orbits_data = orbits_data.dropna()  #drop rows with missing values
-cratio = 0.05  #percentage of data used for training
+cratio = 0.75  #percentage of data used for training
+cratio_example = 0.05 #use a trivial number of the samples just for visualization purposes
 cutoff = round(cratio*orbits_data.shape[0])  #cutoff index that separates training and testing data, 90% training, 10% test
 test_orbits_data = orbits_data.iloc[cutoff::,:] 
 train_orbits_data = orbits_data.iloc[0:cutoff,:]
@@ -64,18 +65,16 @@ train_labels = train_orbits_data.pop('Object Classification')
 
 allowed_subset = ['Orbit Axis (AU)','Orbit Eccentricity','Orbit Inclination (deg)','Perihelion Argument (deg)','Node Longitude (deg)','Mean Anomoly (deg)','Orbital Period (yr)']  #list of possible features
 
-allowed_train = train_orbits_data[allowed_subset]
+allowed_train = train_orbits_data[allowed_subset]   #drop off some more of the columns that aren't useful for prediction
 allowed_test = test_orbits_data[allowed_subset]
 
 optimal_features = ['Perihelion Argument (deg)','Mean Anomoly (deg)','Orbital Period (yr)']
-
-allowed_features = train_orbits_data[allowed_subset]
 
 st.write('First, Select 2 of the features below to demonstrate the SVM algorithm below. The Decision Boundary will be plotted as a series of black lines below:')
 
     
 colum1,colum2 = st.columns(2)
-
+#allow user to select two features to plot in example plot
 with colum1:
     svmparameter1 = st.selectbox(label='Choose 1st Feature',options=allowed_features.columns)
 with colum2:
@@ -89,19 +88,17 @@ if svmparameter1 == svmparameter2:
 
 subset = [svmparameter1,svmparameter2]   #what subset of features to use
 
-train_subset = allowed_train[subset]
+train_subset = allowed_train[subset]   #FINAL TRAIN/TEST FEATURES after pruning
 test_subset = allowed_test[subset]
 
 #Create Pipeline that includes preprocessing + SVM model
 
 a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC(kernel='poly'))])
 
-cratio_example = 0.05 #use a trivial number of the samples just for visualization purposes
 
-# TRAINING THE MODEL
+# TRAINING THE MODEL for the example
 if same_parameter == False:
-    example_cutoff = round(cratio*train_subset.shape[0])
-    st.write(example_cutoff)
+    example_cutoff = round(cratio_example*train_subset.shape[0])   #use the example cutoff instead of the actual cutoff
     example_train_subset = train_subset.iloc[0:example_cutoff,:]
     example_train_labels = train_labels.iloc[0:example_cutoff]
     a_pipeline.fit(example_train_subset,example_train_labels)  #TRAIN MODEL
@@ -152,5 +149,3 @@ st.write('For the sake of simplicity, we decided to reduce the number of output 
 st.write('We then decided to also run a binary classifation problem - whether an asteroid was hazardous or not')
 st.write(train_labels)
 
-#reduced_train_labels =
-#reduced_test_labels =  
