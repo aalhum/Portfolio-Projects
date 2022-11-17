@@ -96,11 +96,15 @@ test_subset = allowed_test[subset]
 
 a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC(kernel='poly'))])
 
+cratio_example = 0.05 #use a trivial number of the samples just for visualization purposes
 
-
-# TRAINING AND TESTING MODEL
+# TRAINING THE MODEL
 if same_parameter == False:
-    a_pipeline.fit(train_subset,train_labels)  #TRAIN MODEL
+    example_cutoff = round(cratio*train_subset.shape[0])
+    st.write(example_cutoff)
+    example_train_subset = train_subset.iloc[0:example_cutoff,:]
+    example_train_labels = train_labels.iloc[0:example_cutoff]
+    a_pipeline.fit(example_train_subset,example_train_labels)  #TRAIN MODEL
 
 
 #predictions = a_pipeline.predict(test_subset)   #PREDICT TESTING DATA
@@ -139,3 +143,14 @@ if same_parameter == False:
 
 st.pyplot(fig)
 
+#to do: figure out what classes to display/predict,
+#add prediction using the full subset of data and then using just the optimal features
+#do the same for the other features
+#perhaps try other feature selection methods to compare?
+
+st.write('For the sake of simplicity, we decided to reduce the number of output classes by combining the Hazardous asteroid classes with their Nonhazardous asteroid classes')
+st.write('We then decided to also run a binary classifation problem - whether an asteroid was hazardous or not')
+st.write(train_labels)
+
+#reduced_train_labels =
+#reduced_test_labels =  
