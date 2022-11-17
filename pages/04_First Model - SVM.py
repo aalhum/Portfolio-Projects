@@ -68,6 +68,8 @@ test_subset = allowed_test[subset]
 
 num_classes = st.selectbox(label='Select the Number of Output Classes',options=['All Classes','4 Classes - No Hazard','Binary - Hazard/Not Hazard'])
 
+kernel_type = st.selectbox(label='Select Kernel Type',options=['linear','poly'])
+
 example_cutoff = round(cratio_example*train_subset.shape[0])   #use the example cutoff instead of the actual cutoff
 example_train_subset = train_subset.iloc[0:example_cutoff,:]
 all_labels = train_labels.iloc[0:example_cutoff]
@@ -89,7 +91,7 @@ data_and_labels = example_train_subset.copy()
 data_and_labels['Object Classification'] = final_labels  #add the class labels to the data so you can plot them
 #Create Pipeline that includes preprocessing + SVM model
 
-a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC(kernel='poly'))])
+a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC(kernel=kernel_type))])
 
 
 # TRAINING THE MODEL for the example
