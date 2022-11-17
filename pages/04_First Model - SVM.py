@@ -22,33 +22,6 @@ st.title('Support Vector Machine')
 
 st.write("A Support Vector Machine (SVM) is an algorithm that is best for linearly separable data. It can be used for both classification and regression. It works by selecting \"support vectors\", which are a subset of the data points chosen to represent their classes. The algorithm separates the data points into classes by dividing them using a decision boundary, with the largest possible margin on either side. The margin boundaries are on the support vectors. ")
 
-#EXAMPLE SVC PLOT
-#this code + the decision boundary plotting code comes from the scikit site
-#example_pipe = Pipeline([('example_scaler',StandardScaler()),('example_svc',svm.SVC(kernel='linear'))])
-#example_pts, example_labels = make_blobs(n_samples = 100,n_features = 2,centers = 2)
-#example_pipe.fit(example_pts,example_labels)
-
-
-#fig_ex,ax_ex = plt.subplots()
-
-#plt.scatter(example_pts[:,0],example_pts[:,1],c=example_labels, cmap=plt.cm.Paired)
-
-#DecisionBoundaryDisplay.from_estimator(
-#    example_pipe,
-#    example_pts,
-#    colors="k",
-#    levels=[-1,0,1],
-#    alpha=0.5,
-#    linestyles=["--","-","--"],
-#    ax=ax_ex,
-#)
-
-#plt.show()
-#st.pyplot(fig_ex)
-
-#END OF EXAMPLE
-
-
 
 #SET UP TRAINING AND TESTING DATA
 orbits_data = pd.read_csv('orbits.csv')  #read in orbits data
@@ -65,7 +38,7 @@ train_labels = train_orbits_data.pop('Object Classification')
 
 allowed_subset = ['Orbit Axis (AU)','Orbit Eccentricity','Orbit Inclination (deg)','Perihelion Argument (deg)','Node Longitude (deg)','Mean Anomoly (deg)','Orbital Period (yr)']  #list of possible features
 
-allowed_train = train_orbits_data[allowed_subset]   #drop off some more of the columns that aren't useful for prediction
+allowed_train = train_orbits_data[allowed_subset]   ##FINAL TRAIN/TEST FEATURES after dropping off more features
 allowed_test = test_orbits_data[allowed_subset]
 
 optimal_features = ['Perihelion Argument (deg)','Mean Anomoly (deg)','Orbital Period (yr)']
@@ -76,9 +49,11 @@ st.write('First, Select 2 of the features below to demonstrate the SVM algorithm
 colum1,colum2 = st.columns(2)
 #allow user to select two features to plot in example plot
 with colum1:
-    svmparameter1 = st.selectbox(label='Choose 1st Feature',options=allowed_features.columns)
+    svmparameter1 = st.selectbox(label='Choose 1st Feature',options=allowed_train.columns)
 with colum2:
-    svmparameter2 = st.selectbox(label='Choose 2cd Feature',options=allowed_features.columns,index=1)
+    svmparameter2 = st.selectbox(label='Choose 2cd Feature',options=allowed_train.columns,index=1)
+
+subset = [svmparameter1,svmparameter2]   #what subset of features to use
 
 same_parameter = False
 
@@ -86,11 +61,32 @@ if svmparameter1 == svmparameter2:
     st.write("You have selected the same feature twice! Please select 2 different features")
     same_parameter = True
 
-subset = [svmparameter1,svmparameter2]   #what subset of features to use
+st.write("Select Number of Output Classes:")
 
-train_subset = allowed_train[subset]   #FINAL TRAIN/TEST FEATURES after pruning
+train_subset = allowed_train[subset]   #example train/test sets with only 2 features
 test_subset = allowed_test[subset]
 
+num_classes = st.selectbox(label='Select the Number of Output Classes',options=['All Classes','4 Classes - No Hazard','Binary - Hazard/Not Hazard'])
+
+example_cutoff = round(cratio_example*train_subset.shape[0])   #use the example cutoff instead of the actual cutoff
+example_train_subset = train_subset.iloc[0:example_cutoff,:]
+all_labels = train_labels.iloc[0:example_cutoff]
+
+if num_classes == 'All Classes':
+    final_labels = all_labels
+elif num_classes == '4 Classes - No Hazard':
+    quad_labels = all_labels.copy()
+    final_labels = quad_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','Apollo Asteroid (Hazard)':'Apollo Asteroid','Apohele Asteroid (Hazard)':'Apohele Asteroid','Aten Asteroid (Hazard)':'Aten Asteroid'})
+elif num_classes == 'Binary - Hazard/Not Hazard':
+    binary_labels = all_labels.copy()
+    final_labels = binary_labels.replace({'Amor Asteroid (Hazard)':'Hazard','Apollo Asteroid (Hazard)':'Hazard','Apohele Asteroid (Hazard)':'Hazard','Aten Asteroid (Hazard)':'Hazard','Amor Asteroid':'Not Hazard','Apollo Asteroid':'Not Hazard','Aten Asteroid':'Not Hazard','Apohele Asteroid':'Not Hazard'})
+
+st.write("Possible Output Labels:")
+st.write(np.unique(np.asarray(final_labels)))
+
+
+data_and_labels = example_train_subset.copy()
+data_and_labels['Object Classification'] = final_labels  #add the class labels to the data so you can plot them
 #Create Pipeline that includes preprocessing + SVM model
 
 a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC(kernel='poly'))])
@@ -98,38 +94,18 @@ a_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_svc',svm.SVC(kernel
 
 # TRAINING THE MODEL for the example
 if same_parameter == False:
-    example_cutoff = round(cratio_example*train_subset.shape[0])   #use the example cutoff instead of the actual cutoff
-    example_train_subset = train_subset.iloc[0:example_cutoff,:]
-    example_train_labels = train_labels.iloc[0:example_cutoff]
-    a_pipeline.fit(example_train_subset,example_train_labels)  #TRAIN MODEL
+    a_pipeline.fit(example_train_subset,final_labels)  #TRAIN MODEL
 
-
-#predictions = a_pipeline.predict(test_subset)   #PREDICT TESTING DATA
-#st.write("5-fold cross validation was computed on the training data. The accuracy ratio for each of the 5 folds is given below.")
-#accuracies = cross_val_score(a_pipeline,train_subset,train_labels, cv=5)
-#accuracy = clf.score(test_subset,test_labels)       #OBTAIN ACCURACY
-#st.write(accuracies)
-#st.write(np.unique(predictions))
-
-
-
-#st.write(orbits_data['Object Classification'].value_counts())
-
-#st.write(confusion_matrix(test_labels,predictions))
-
-
-
-#plot decision boundaries
 
 
 fig,ax = plt.subplots()
 
-sns.scatterplot(data=orbits_data,x=subset[0],y=subset[1],hue = "Object Classification", palette = "muted",ax=ax)
+sns.scatterplot(data=data_and_labels,x=subset[0],y=subset[1],hue = "Object Classification", palette = "muted",ax=ax)
 
 if same_parameter == False:
     DecisionBoundaryDisplay.from_estimator(
         a_pipeline,
-        train_subset,
+        example_train_subset,
         plot_method="contour",
         colors="k",
         levels = [-1,0,1],
@@ -145,7 +121,5 @@ st.pyplot(fig)
 #do the same for the other features
 #perhaps try other feature selection methods to compare?
 
-st.write('For the sake of simplicity, we decided to reduce the number of output classes by combining the Hazardous asteroid classes with their Nonhazardous asteroid classes')
-st.write('We then decided to also run a binary classifation problem - whether an asteroid was hazardous or not')
-st.write(train_labels)
+
 
