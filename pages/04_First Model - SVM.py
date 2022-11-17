@@ -7,11 +7,13 @@ import seaborn as sns
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from sklearn import svm
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.datasets import make_blobs
+from sklearn.feature_selection import RFECV, SelectKBest, chi2
+
 #citation: Scikit-learn: Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.
 
 #CODE FOR FIRST MODEL - SVM
@@ -44,6 +46,8 @@ DecisionBoundaryDisplay.from_estimator(
 plt.show()
 st.pyplot(fig_ex)
 
+#END OF EXAMPLE
+
 
 
 #SET UP TRAINING AND TESTING DATA
@@ -51,7 +55,7 @@ orbits_data = pd.read_csv('orbits.csv')  #read in orbits data
 #st.write(labels.unique())    #check how many unique values are in asteroid classification
 orbits_data = orbits_data.drop(['Object Name','Orbital Reference'],axis=1) #drop columns not used as features
 orbits_data = orbits_data.dropna()  #drop rows with missing values
-cratio = 0.9  #percentage of data used for training
+cratio = 0.99  #percentage of data used for training
 cutoff = round(cratio*orbits_data.shape[0])  #cutoff index that separates training and testing data, 90% training, 10% test
 test_orbits_data = orbits_data.iloc[cutoff::,:] 
 train_orbits_data = orbits_data.iloc[0:cutoff,:]
@@ -132,3 +136,4 @@ DecisionBoundaryDisplay.from_estimator(
 )
 plt.show()
 st.pyplot(fig)
+
