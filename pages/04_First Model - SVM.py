@@ -43,7 +43,12 @@ allowed_test = test_orbits_data[allowed_subset]
 
 optimal_features = ['Perihelion Argument (deg)','Mean Anomoly (deg)','Orbital Period (yr)']
 
-st.write('First, Select 2 of the features below to demonstrate the SVM algorithm below. The Decision Boundary will be plotted as a series of black lines below:')
+st.write('First, we will demonstrate how the SVM generates a decision boundary below by plotting only 2 of the features at a time so they can be displayed on a graph.')
+st.write('Select 2 features of the data to plot. Then choose the number of output classes - this is how many categories/groups that the data points belong to - do you want to see all of the asteroid classifications, or combine Hazardous and Non-Hazardous asteroids together, or simply see whether asteroids are Hazardous or Non-Hazardous?')
+st.write('Finally, choose a kernel, which is the shape of the decision boundary -- should the decision boundary be linear or can it be curved?')
+
+st.write('The two features you select will be plotted below, with the points being assigned different colors based on their asteroid classification (see the legend)')
+st.write('You will see the decision boundary as a segmented black line that attempts to separate the different classes from each other')
 
     
 colum1,colum2 = st.columns(2)

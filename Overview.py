@@ -19,10 +19,10 @@ st.title("**Exploration of NASA Potential Asteroid Impact Data**")
 st.write("Contributors:")
 
 st.write("Ala Al-Humadi")
-st.write("Drake Khazal")
+st.write("With Assistance from: Drake Khazal")
 
 
-st.write("NASA Asteroid Impact Data Exploration")
+
 st.write("The data used for this project was taken from: https://www.kaggle.com/datasets/nasa/asteroid-impacts")
 st.write("The data is in 2 parts:")
 st.write("The first dataset is displayed on this page below, and it includes variables such as Asteroid Magnitude (a measure of brightness), Asteroid Velocity, Palermo/Torino Scale values (click on these parameters in the drop-down menu to learn more about them)")
@@ -30,6 +30,9 @@ st.write("The second dataset is displayed on the \"Orbital Characteristics\" pag
 st.write("The data is from NASA's Sentry system, a long-term system that monitors the potential orbits of asteroids to see whether they will crash into Earth (a very unlikely occurrence).")
 st.write("On these first two pages, we plot the data using a scatterplot to observe the general trends ")
 
+st.write("We decided to try the SVM model because the SVM algorithm is good for linearly separable data so we were curious and wanted to compare other methods that can better represent nonlinear decision boundaries (as well as different SVM nonlinear kernels).")
+st.write("We decided to try KNN as it is a very simple algorithm that is a good point of comparison to the other more involved algorithms.")
+st.write("Finally, we decided to try using Random Forest because it is one example of an ensemble method utilizing an underlying very simple model - a decision tree, so we expected it to perform better than SVM and KNN.")
 #read in the data using pandas read_csv()
 impact_data = pd.read_csv('impacts.csv')
 
