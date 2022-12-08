@@ -132,12 +132,13 @@ st.pyplot(fig)
 
 
 #RUNNING THE ALGORITHM FOR REAL, WITH CHOSEN FEATURES - JUST REPLACE THE FEATURES BELOW
+#now do hyper parameter tuning using gridsearchCV
 #allowed_train
 #allowed_test
 train_labels_4 = train_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','Apollo Asteroid (Hazard)':'Apollo Asteroid','Apohele Asteroid (Hazard)':'Apohele Asteroid','Aten Asteroid (Hazard)':'Aten Asteroid'})
 test_labels_4 = test_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','Apollo Asteroid (Hazard)':'Apollo Asteroid','Apohele Asteroid (Hazard)':'Apohele Asteroid','Aten Asteroid (Hazard)':'Aten Asteroid'})
 
-st.write('When we use all of the features available to predict 4 asteroid classes, the resulting accurate is:')
+st.write('When we use all of the features available to predict 4 asteroid classes, the resulting accuracy is:')
 b_pipeline = Pipeline([('ala_scaler2',StandardScaler()),('ala_svc2',svm.SVC(kernel='rbf'))])
 #fit the model
 b_pipeline.fit(allowed_train,train_labels_4)
@@ -145,8 +146,8 @@ b_pipeline.fit(allowed_train,train_labels_4)
 #predict on test set
 accuracy_full = b_pipeline.score(allowed_test,test_labels_4)
 
-st.write("The accuracy of the SVM with linear kernel on the test data is:")
+st.write("The accuracy of the SVM with rbf kernel on the test data is:")
 st.write(accuracy_full)
-#90.23% accuracy with rbf kernel
+#97.3% accuracy with rbf kernel
 
 #at the very least record these values using all of the features for each model, and put it into a table at the end - it's useful

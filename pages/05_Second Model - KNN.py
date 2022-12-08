@@ -55,17 +55,15 @@ st.write("Different K values and their associated classification accuracy")
 st.dataframe(scores_data_frame)
 
 #get the k-value with the highest accuracy
-optimal_k_value = max(scores[1,:])
-st.write('The k-value with the highest accuracy on the test set is: ')
-st.write(optimal_k_value)
+#optimal_k_value = max(scores[1,:])
+#st.write('The k-value with the highest accuracy on the test set is: ')
+#st.write(optimal_k_value)
 #The optimal value for K based on the cross validation seems to be 50, with the highest accuracy
-neigh_opt = KNeighborsClassifier(n_neighbors=optimal_k_value)
-neigh_opt.fit(train_subset,train_labels_4)
-accuracy_opt = neigh.score(test_subset,test_labels_4)
-st.write("The accuracy of the model (with optimal K-value) on the test set is:")
-st.write(accuracy_opt)
-
-
+#neigh_opt = KNeighborsClassifier(n_neighbors=optimal_k_value)
+#neigh_opt.fit(train_subset,train_labels_4)
+#accuracy_opt = neigh.score(test_subset,test_labels_4)
+#st.write("The accuracy of the model (with optimal K-value) on the test set is:")
+#st.write(accuracy_opt)
 
 
 
@@ -73,13 +71,13 @@ st.write(accuracy_opt)
 #allowed_train
 #allowed_test
 
-st.write('When we use all of the features available to predict 4 asteroid classes, the resulting accurate is:')
-b_pipeline = Pipeline([('ala_scaler2',StandardScaler()),('ala_svc2',svm.SVC(kernel='rbf'))])
+#st.write('When we use all of the features available to predict 4 asteroid classes, the resulting accurate is:')
+#b_pipeline = Pipeline([('ala_scaler2',StandardScaler()),('ala_svc2',svm.SVC(kernel='rbf'))])
 #fit the model
-b_pipeline.fit(allowed_train,train_labels_4)
+#b_pipeline.fit(allowed_train,train_labels_4)
 
 #predict on test set
-accuracy_full = b_pipeline.score(allowed_test,test_labels_4)
+#accuracy_full = b_pipeline.score(allowed_test,test_labels_4)
 
 st.write("The accuracy of the SVM with linear kernel on the test data is:")
 st.write(accuracy_full)
