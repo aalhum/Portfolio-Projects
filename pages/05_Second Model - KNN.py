@@ -79,6 +79,6 @@ st.dataframe(scores_data_frame)
 #predict on test set
 #accuracy_full = b_pipeline.score(allowed_test,test_labels_4)
 
-st.write("The accuracy of the SVM with linear kernel on the test data is:")
-st.write(accuracy_full)
+#st.write("The accuracy of the SVM with linear kernel on the test data is:")
+#st.write(accuracy_full)
 #90.23% accuracy with rbf kernel
