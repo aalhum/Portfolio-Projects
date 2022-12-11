@@ -109,7 +109,7 @@ if same_parameter == False:
 
 fig,ax = plt.subplots()
 
-sns.scatterplot(data=data_and_labels,x=subset[0],y=subset[1],hue = "Object Classification", palette = "muted",ax=ax)
+if same_parameter == False: sns.scatterplot(data=data_and_labels,x=subset[0],y=subset[1],hue = "Object Classification", palette = "muted",ax=ax)
 
 if same_parameter == False:
     DecisionBoundaryDisplay.from_estimator(
