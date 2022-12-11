@@ -19,7 +19,7 @@ orbits_data = pd.read_csv('orbits.csv')  #read in orbits data
 #st.write(labels.unique())    #check how many unique values are in asteroid classification
 orbits_data = orbits_data.drop(['Object Name','Orbital Reference'],axis=1) #drop columns not used as features
 orbits_data = orbits_data.dropna()  #drop rows with missing values
-cratio = 0.75  #percentage of data used for training
+cratio = 0.50  #percentage of data used for training
 cutoff = round(cratio*orbits_data.shape[0])  #cutoff index that separates training and testing data, 90% training, 10% test
 test_orbits_data = orbits_data.iloc[cutoff::,:] 
 train_orbits_data = orbits_data.iloc[0:cutoff,:]
@@ -93,8 +93,8 @@ st.write(f"out of a total number of {ala_rfecv.n_features_in_} features")
 
 st.write("Thus including all of the features is the optimal set, which makes sense")
 
-st.write("When the percentage of training data used was increased from 20% to 50% to 75% of the total dataset, the number of optimal features also increased. This is likely because the number of samples increased so the ratios of each output class were different.")
-st.write("The labels for these features were:")
+st.write("When the percentage of training data used was increased, the number of optimal features also increased, from 20% (3 optimal features) to 50% (6 optimal features) to 75% (7 optimal features) of the total dataset. This is likely because the number of samples increased so the ratios of each output class were different.")
+
 #st.write()
 
 #feat_pipeline = Pipeline([('ala_feat_scaler',StandardScaler()),('ala_feat_svc',svm.SVC(kernel='linear'))])

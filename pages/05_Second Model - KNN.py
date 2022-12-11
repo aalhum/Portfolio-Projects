@@ -7,6 +7,7 @@ import seaborn as sns
 import sklearn
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.model_selection import GridSearchCV
 
 #IM ON THIS
 st.title("K Nearest Neighbors Algorithm")
@@ -15,7 +16,7 @@ st.write("K-Nearest-Neighbors algorithm classifies each point based on its close
 
 orbits_data = pd.read_csv('orbits.csv')  #read in orbits data
 orbits_data = orbits_data.dropna()  #drop rows with missing values
-cutoff = round(.9*orbits_data.shape[0])  #cutoff index that separates training and testing data, 90% training, 10% test
+cutoff = round(.75*orbits_data.shape[0])  #cutoff index that separates training and testing data, 90% training, 10% test
 test_orbits_data = orbits_data.iloc[cutoff::,:] 
 train_orbits_data = orbits_data.iloc[0:cutoff,:]
 test_labels = test_orbits_data.pop('Object Classification')  #get the asteroid classifications/target labels
@@ -25,9 +26,9 @@ train_orbits_data = train_orbits_data.drop(['Object Name','Orbital Reference'],a
 test_orbits_data = test_orbits_data.drop(['Object Name','Orbital Reference'],axis=1)
 
 #use only an allowed subset of features
-allowed_subset = ['Orbit Axis (AU)','Orbit Eccentricity','Orbit Inclination (deg)','Perihelion Argument (deg)','Node Longitude (deg)','Mean Anomoly (deg)','Orbital Period (yr)']  #list of possible features
-train_subset = train_orbits_data[allowed_subset]
-test_subset = test_orbits_data[allowed_subset]
+optimal_subset = ['Orbit Axis (AU)','Orbit Eccentricity','Orbit Inclination (deg)','Perihelion Argument (deg)','Node Longitude (deg)','Mean Anomoly (deg)','Orbital Period (yr)']  #list of possible features
+train_subset = train_orbits_data[optimal_subset]
+test_subset = test_orbits_data[optimal_subset]
 #combine the labels into 4 labels instead of all 7 labels
 train_labels_4 = train_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','Apollo Asteroid (Hazard)':'Apollo Asteroid','Apohele Asteroid (Hazard)':'Apohele Asteroid','Aten Asteroid (Hazard)':'Aten Asteroid'})
 test_labels_4 = test_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','Apollo Asteroid (Hazard)':'Apollo Asteroid','Apohele Asteroid (Hazard)':'Apohele Asteroid','Aten Asteroid (Hazard)':'Aten Asteroid'})
@@ -35,11 +36,11 @@ test_labels_4 = test_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','A
 
 #note: we're using all of the features, not just 2
 #NOTE: would be a good idea to show an example KNN changing in an animation using plotly
-#maybe I should use the built-in cross validation to find the optimal k-value instead of manually doing it
+#maybe I should use the built-in function to find the optimal k-value instead of manually doing it
 k_values = [25,50,100,200,300,400,500,600,750]
 scores = np.zeros([2,len(k_values)])
 i = 0
-
+st.write("First I attempted to find the optimal K value for the KNN model by manually looping through each K value:")
 for k_val in k_values:
     neigh = KNeighborsClassifier(n_neighbors=k_val)
     neigh.fit(train_subset,train_labels_4)  #fit the algorithm to the training data
@@ -54,31 +55,11 @@ scores_data_frame = pd.DataFrame(data=np.transpose(scores),columns = ['K Value',
 st.write("Different K values and their associated classification accuracy")
 st.dataframe(scores_data_frame)
 
-#get the k-value with the highest accuracy
-#optimal_k_value = max(scores[1,:])
-#st.write('The k-value with the highest accuracy on the test set is: ')
-#st.write(optimal_k_value)
-#The optimal value for K based on the cross validation seems to be 50, with the highest accuracy
-#neigh_opt = KNeighborsClassifier(n_neighbors=optimal_k_value)
-#neigh_opt.fit(train_subset,train_labels_4)
-#accuracy_opt = neigh.score(test_subset,test_labels_4)
-#st.write("The accuracy of the model (with optimal K-value) on the test set is:")
-#st.write(accuracy_opt)
+st.write("Below I try another method, using the GridSearchCV function (which uses cross validation to select optimal parameter values)")
+neigh_cv = KNeighborsClassifier()
 
+K_gridsearch = GridSearchCV(
+    estimator=neigh_cv,
+    param_grid={'n_neighbors':[10,20,30,40,50,100,200,300,400]}
+)
 
-
-#RUNNING THE ALGORITHM FOR REAL, WITH CHOSEN FEATURES - JUST REPLACE THE FEATURES BELOW
-#allowed_train
-#allowed_test
-
-#st.write('When we use all of the features available to predict 4 asteroid classes, the resulting accurate is:')
-#b_pipeline = Pipeline([('ala_scaler2',StandardScaler()),('ala_svc2',svm.SVC(kernel='rbf'))])
-#fit the model
-#b_pipeline.fit(allowed_train,train_labels_4)
-
-#predict on test set
-#accuracy_full = b_pipeline.score(allowed_test,test_labels_4)
-
-#st.write("The accuracy of the SVM with linear kernel on the test data is:")
-#st.write(accuracy_full)
-#90.23% accuracy with rbf kernel
