@@ -12,10 +12,11 @@ from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
 from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn.model_selection import GridSearchCV
 
 orbits_data = pd.read_csv('orbits.csv')
 orbits_data = orbits_data.dropna()  #drop rows with missing values
-percent_thresh = 0.7
+percent_thresh = 0.75
 cutoff = round(percent_thresh*orbits_data.shape[0])  #cutoff index that separates training and testing data, 90% training, 10% test
 test_orbits_data = orbits_data.iloc[cutoff::,:] 
 train_orbits_data = orbits_data.iloc[0:cutoff,:]
@@ -30,48 +31,42 @@ test_orbits_data = test_orbits_data.drop(['Object Name','Orbital Reference'],axi
 #note: we're using the optimal subset of features
 
 #possible options for features
-optimal_features = ['Perihelion Argument (deg)','Mean Anomoly (deg)','Orbital Period (yr)']
-allowed_subset = ['Orbit Axis (AU)','Orbit Eccentricity','Orbit Inclination (deg)','Perihelion Argument (deg)','Node Longitude (deg)','Mean Anomoly (deg)','Orbital Period (yr)']  #list of possible features
-small_subset = ['Perihelion Argument (deg)', 'Orbit Eccentricity']
+optimal_subset = ['Orbit Axis (AU)','Orbit Eccentricity','Orbit Inclination (deg)','Perihelion Argument (deg)','Node Longitude (deg)','Mean Anomoly (deg)','Orbital Period (yr)']  #list of possible features
+
 
 #the actual train and test data subsets used
-features_to_use = small_subset
-used_train_features = train_orbits_data[features_to_use]
-used_test_features = test_orbits_data[features_to_use]
+used_train_features = train_orbits_data[optimal_subset]
+used_test_features = test_orbits_data[optimal_subset]
+train_labels_4 = train_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','Apollo Asteroid (Hazard)':'Apollo Asteroid','Apohele Asteroid (Hazard)':'Apohele Asteroid','Aten Asteroid (Hazard)':'Aten Asteroid'})
+test_labels_4 = test_labels.replace({'Amor Asteroid (Hazard)':'Amor Asteroid','Apollo Asteroid (Hazard)':'Apollo Asteroid','Apohele Asteroid (Hazard)':'Apohele Asteroid','Aten Asteroid (Hazard)':'Aten Asteroid'})
 
-#Define the Pipeline that includes the model to be trained, RandomForestClassifier
-rf_pipeline = Pipeline([('ala_scaler',StandardScaler()),('ala_rfc',RandomForestClassifier(n_estimators=10))])
 
-rf_pipeline.fit(used_train_features,train_labels)  #TRAIN MODEL
 
-#SHOW THE RANDOM FOREST DECISION TREE LABELS - USE ALL OF THE FEATURES AND SEE WHAT THE TOP ONES ARE, THE MOST IMPORTANT ONES.
-#COMPARE TO THE OPTIMAL SUBSET YOU FOUND BEFORE
+#Optimize Parameter for Random Forest using cross validation
+ranfor_cv = RandomForestClassifier()
+list_of_numTrees = [10,20,30,40,50,60,70,80,90,100]
+rf_gridsearch = GridSearchCV(
+    estimator=ranfor_cv,
+    param_grid={'n_estimators':list_of_numTrees}
+)
 
-st.write("5-fold cross validation was computed on the training data. The accuracy ratio for each of the 5 folds is given below.")
-accuracies = cross_val_score(rf_pipeline,used_train_features,train_labels, cv=5)
-#accuracy = clf.score(test_subset,test_labels)       #OBTAIN ACCURACY
-st.write(accuracies)
-#st.write(np.unique(predictions))
+rf_gridsearch.fit(used_train_features,train_labels_4)
 
-predictions = rf_pipeline.predict(used_test_features)   #PREDICT TESTING DATA
-accuracy = rf_pipeline.score(used_test_features,test_labels)
-st.write("The test set accuracy is:")
-st.write(accuracy)
-
+st.write("The list of possible number of trees provided to gridsearchCV was:")
+st.write(list_of_numTrees)
+st.write("The results of using gridsearchCV to search for the optimal number of trees is:")
+st.write(rf_gridsearch.best_params_)
+#most optimal number of trees, testing 10-100, was 100
 #show just one of the actual trees generated using tree.plot_tree
 #show the decision boundary generated using Decision_boundary_display.from_estimator which can plot a tree
 
 #tree.plot_tree(rf_pipeline[-1])
 
-fig,ax = plt.subplots()
+ranfor_test = RandomForestClassifier(n_estimators=100)
 
-DecisionBoundaryDisplay.from_estimator(
-    rf_pipeline[-1],
-    used_train_features[small_subset],
-    ax = ax
-)
-
-sns.scatterplot(data=used_train_features,x=small_subset[0],y=small_subset[1],hue=train_labels)
-
-
-st.pyplot(fig)
+#fit random forest model using optimal number of trees
+ranfor_test.fit(used_train_features,train_labels_4)
+accuracy = ranfor_test.score(used_test_features,test_labels_4)
+st.write("The accuracy of the random forest model with 100 trees on the test set was:")
+st.write(accuracy)
+#97.9% accuracy

@@ -57,9 +57,25 @@ st.dataframe(scores_data_frame)
 
 st.write("Below I try another method, using the GridSearchCV function (which uses cross validation to select optimal parameter values)")
 neigh_cv = KNeighborsClassifier()
-
+list_of_kvalues = [10,20,30,40,50,100,200,300,400]
 K_gridsearch = GridSearchCV(
     estimator=neigh_cv,
-    param_grid={'n_neighbors':[10,20,30,40,50,100,200,300,400]}
+    param_grid={'n_neighbors':list_of_kvalues}
 )
 
+K_gridsearch.fit(train_subset,train_labels_4)
+
+st.write("The list of possible K-values provided to gridsearchCV was:")
+st.write(list_of_kvalues)
+st.write("The results of using gridsearchCV to search for the optimal K values is:")
+st.write(K_gridsearch.best_params_)
+
+neigh_cv_test = KNeighborsClassifier(n_neighbors = 40)
+
+neigh_cv_test.fit(train_subset,train_labels_4)
+
+accuracy = neigh_cv_test.score(test_subset,test_labels_4)
+
+st.write("The accuracy for running the KNN with K=40 on the test set is:")
+st.write(accuracy)
+#59.2% accuracy
